@@ -1,4 +1,4 @@
-import { ICategory, IProduct, IActivity } from "../types"
+import { ICategory, IProduct, IActivity } from "../customTypes/all"
 
 export const products: IProduct[] = [
     {

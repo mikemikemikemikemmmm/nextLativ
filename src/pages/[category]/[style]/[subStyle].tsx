@@ -1,64 +1,70 @@
 import GenderAside from "@components/categoryAside"
-import SubStyleProducts from "@components/SubStyleProducts"
-import {  fakePromise } from "fakeData"
-import { flatCategory, getProductDataArrayByIdArray } from "utils"
-import { ICategory, IStyle, ISubStyle, ISeries_products, ISeries,IActivity ,IProduct} from "@types/"
+import { getStaticPathApi } from "@api/getStaticPaths"
+import { getStaticPropApi } from "@api/getStaticProps"
+import { TAside } from "@customTypes/aside"
+import { ISeries } from "@customTypes/series"
+import { useCustomDispatch } from 'hooks'
+import { useRouter } from "next/router"
+import CardList from "@components/cardList"
 interface IProps {
-    stylesData: IStyle[],
-    series_products: ISeries_products[],
-    sub_style_name: string,
-    category_route: string
-    activities: IActivity[]
+    asideData: TAside,
+    seriesData: ISeries[]
 }
 export default function GenderSubCategory(props: IProps) {
-    const { stylesData, series_products, sub_style_name, category_route, activities } = props
+    const { asideData, seriesData } = props
+    const router = useRouter()
+    const categoryRoute = router.query.category as string
+    const dispatch = useCustomDispatch()
+    dispatch({ type: 'CHANGE_CATEGORYROUTE', value: categoryRoute })
     return (
         <div className='flex'>
-            <GenderAside styles={stylesData} categoryRoute={category_route} activities={activities} />
-            <SubStyleProducts series_products={series_products} sub_style_name={sub_style_name} />
+            <GenderAside asideData={asideData} categoryRoute={categoryRoute} />
+            <CardList seriesData={seriesData} isShowSeriesName={true} />
         </div>
     )
 }
 export async function getStaticPaths() {
-    const flatedCategoryRoutes = flatCategory()
-    return {
-        paths: flatedCategoryRoutes.map(flatedCategoryRoute => ({
-            params: {
-                category: flatedCategoryRoute.categoryRoute,
-                style: flatedCategoryRoute.styleRoute,
-                subStyle: flatedCategoryRoute.subStyleRoute,
+    const allCategorys = await getStaticPathApi.getAllRoute()
+    const filteredAllcategorys = allCategorys
+        .filter(categoryData => categoryData.style_route !== null) // filter category index
+        .map(categoryData => {
+            return {
+                params: {
+                    category: categoryData.category_route,
+                    style: categoryData.style_route,
+                    subStyle: categoryData.sub_style_route
+                }
             }
-        })),
-        fallback: true
+        })
+    /**
+     * example
+     * [{
+         "category_route": "women",
+         "style_route": "tops",
+         "sub_style_route": "short_graphic_tee"
+     },
+     {
+         "category_route": "women",
+         "style_route": "tops",
+         "sub_style_route": "long"
+     }]
+     */
+    return {
+        paths: filteredAllcategorys,
+        fallback: false
     };
 }
 export const getStaticProps = async ({ params }) => {
-    const categoryData = await fakePromise('getCategorysByRoute', params.category) as ICategory
-    const stylesData = categoryData.styles
-    const targetStyle: IStyle = stylesData.find(style => style.style_route === params.style)
-    const targetSubStyle: ISubStyle = targetStyle.subStyles.find(subStyle => subStyle.sub_style_route === params.subStyle)
-    const targetSeries: ISeries[] = targetSubStyle.series
-    const productIdArray = []
-    const productIdMap = {}
-    targetSeries.forEach(series => series.product_ids.forEach(id => {
-        productIdMap[id] = productIdArray.push(id) - 1
-    }))
-    const productsData: IProduct[] = await getProductDataArrayByIdArray(productIdArray)
-    const series_products: ISeries_products = targetSeries.map(series => {
-        const _productsData = series.product_ids.map(id => productsData[productIdMap[id]])
-        return {
-            ...series,
-            products: _productsData
-        }
-    })
-    const activities = await fakePromise('getActivities')
+    const { category, style, subStyle } = params
+    const asideData = await getStaticPropApi.getAsideByCategoryRoute(category)
+    const seriesData = await getStaticPropApi.getSeriesBySubStyleRoute(category, style, subStyle)
+    if (!seriesData || !asideData) {
+        return { notFound: true }
+    }
     return {
         props: {
-            activities,
-            category_route: categoryData.category_route,
-            stylesData,
-            series_products,
-            sub_style_name: targetSubStyle.sub_style_name
+            asideData,
+            seriesData
         },
     }
 }

@@ -1,44 +1,49 @@
 
 import { useRouter } from 'next/router'
 import CategoryAside from "@components/categoryAside"
-import { IActivity, ICategory, IProduct, IStyle } from "@types/index"
-import { categoryPath, fakePromise } from "fakeData"
-import CategoryIndex from "@components/categoryIndex"
+import { getStaticPathApi } from '@api/getStaticPaths'
+import { getStaticPropApi } from '@api/getStaticProps'
+import { ISeries } from '@customTypes/series'
+import { TAside } from '@customTypes/aside'
+import { useCustomDispatch } from 'hooks'
+import CardList from '@components/cardList'
 interface IProps {
-    stylesData: IStyle[],
-    productsData: IProduct[],
-    activities: IActivity[]
+    seriesData: ISeries[], asideData: TAside
 }
 export default function Category(props: IProps) {
-    const { stylesData, productsData, activities } = props
+    const { seriesData, asideData } = props
     const router = useRouter()
     const categoryRoute = router.query.category as string
+    const dispatch = useCustomDispatch()
+    dispatch({ type: 'CHANGE_CATEGORYROUTE', value: categoryRoute })
     return (
         <div className='flex'>
-            <CategoryAside styles={stylesData} categoryRoute={categoryRoute} activities={activities} />
-            <CategoryIndex category_route={categoryRoute} productsData={productsData} />
+            <CategoryAside asideData={asideData} categoryRoute={categoryRoute} />
+            <CardList seriesData={seriesData} isShowSeriesName={false} />
         </div>
     )
 }
 export async function getStaticPaths() {
+    const allCategorys = await getStaticPathApi.getOnlyCategoryRoute()
+    const paths = allCategorys.map(categoryRoute => {
+        return {
+            params: { category: categoryRoute.category_route }
+        }
+    })
     return {
-        paths: categoryPath.map(categoryRoute => {
-            return {
-                params: { category: categoryRoute }
-            }
-        }),
-        fallback: true
+        paths,
+        fallback: false
     };
 }
 export const getStaticProps = async ({ params }) => {
-    const categoryData = await fakePromise('getCategorysByRoute', params.category) as ICategory
-    const stylesData = categoryData.styles
-    const productsData = await fakePromise('getProducts', categoryData.product_ids)
-    const activities = await fakePromise('getActivities')
-
+    const asideData = await getStaticPropApi.getAsideByCategoryRoute(params.category)
+    const seriesData = await getStaticPropApi.getSeriesByCategoryRoute(params.category)
+    if (!seriesData || !asideData) {
+        return { notFound: true }
+    }
     return {
         props: {
-            stylesData, productsData, activities
+            asideData, seriesData
         },
     }
 }

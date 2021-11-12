@@ -1,30 +1,23 @@
 import Link from 'next/link'
-import { IStyle, IActivity } from '../types'
-
-export default function CategoryAside(props: { styles: IStyle[], categoryRoute: string, activities: IActivity[] }) {
-    const { styles, categoryRoute, activities } = props
+import { TAside } from 'customTypes/aside'
+import { asideWidth } from 'const'
+export default function CategoryAside(props: { asideData: TAside, categoryRoute: string }) {
+    const { asideData, categoryRoute } = props
     return (
-        <aside>
-            <ul>
-                {activities.map(activity =>
-                    <li key={activity.activity_id}>
-                        <Link href={`/OnSale/${activity.activity_route}`}>
-                            <a>{activity.activity_name}</a>
-                        </Link>
-                    </li>)}
-            </ul>
+        <aside style={{ width: asideWidth }} className='px-4'>
             {
-                styles.map(style => (
-                    <ul key={style.style_id}>
-                        <div>{style.style_name}</div>
-                        {style.subStyles.map(subStyle => <li key={subStyle.sub_style_id}>
-                            <Link href={`/${categoryRoute}/${style.style_route}/${subStyle.sub_style_route}`}>
-                                <a>{subStyle.sub_style_name}</a>
-                            </Link>
-                        </li>)}
+                asideData.map(style => (
+                    <ul className='text-xm select-none' key={style.style_route}>
+                        <div className='text-gray-800 py-1 '>{style.style_name}</div>
+                        {style.subStyles.map(subStyle =>
+                            <li className='hover:text-primary text-gray-600 py-1'
+                                key={subStyle.sub_style_route}>
+                                <Link href={`/${categoryRoute}/${style.style_route}/${subStyle.sub_style_route}`}>
+                                    <a>&gt;{subStyle.sub_style_name}</a>
+                                </Link>
+                            </li>)}
                     </ul>))
             }
-
         </aside>
     )
 }
