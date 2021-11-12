@@ -7,7 +7,7 @@ import { ISeries } from '@customTypes/series'
 import { TAside } from '@customTypes/aside'
 import { useCustomDispatch } from 'hooks'
 import CardList from '@components/cardList'
-interface IProps {
+interface IProps { 
     seriesData: ISeries[], asideData: TAside
 }
 export default function Category(props: IProps) {
