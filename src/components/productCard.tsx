@@ -1,5 +1,4 @@
 import { productCardImageHeight, productCardImageWidth, baseURL } from 'const'
-import { products } from 'fakeData'
 import Image from 'next/image'
 import Link from 'next/link'
 import { imageLoader } from 'utils'
