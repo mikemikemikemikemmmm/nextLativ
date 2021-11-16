@@ -13,6 +13,7 @@ export default function ProductCard(props: { productCardData: IProductCard, isSh
                 <Link href={`/Detail/${firstSubProductId}`}>
                     <a>
                         <Image
+                            alt={productCardData.product_name}
                             loader={imageLoader({
                                 use: 'productCard',
                                 productId: productCardData.product_id
@@ -33,11 +34,13 @@ export default function ProductCard(props: { productCardData: IProductCard, isSh
                                 href={`/Detail/${subProduct.sub_product_id}`}
                             >
                                 <a>
-                                    <Image loader={imageLoader(
-                                        {
-                                            use: 'color',
-                                            colorId: subProduct.color_id
-                                        })} height={16} width={16} src={String(subProduct.color_id)} />
+                                    <Image
+                                        alt={subProduct.color_name}
+                                        loader={imageLoader(
+                                            {
+                                                use: 'color',
+                                                colorId: subProduct.color_id
+                                            })} height={16} width={16} src={String(subProduct.color_id)} />
                                 </a>
                             </Link>
                         </div>)}

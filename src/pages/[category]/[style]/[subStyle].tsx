@@ -16,7 +16,7 @@ export default function GenderSubCategory(props: IProps) {
     const router = useRouter()
     const categoryRoute = router.query.category as string
     const dispatch = useCustomDispatch()
-    useEffect(() => { dispatch({ type: 'CHANGE_CATEGORYROUTE', value: categoryRoute }) }, [categoryRoute])
+    useEffect(() => { dispatch({ type: 'CHANGE_CATEGORYROUTE', value: categoryRoute }) }, [categoryRoute,dispatch])
     return (
         <div className='flex'>
             <GenderAside asideData={asideData} categoryRoute={categoryRoute} />

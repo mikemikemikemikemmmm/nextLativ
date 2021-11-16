@@ -17,7 +17,7 @@ export default function ProductDetailPage(props: IProps) {
     const dispatch = useCustomDispatch()
     useEffect(() => {
         dispatch({ type: 'CHANGE_CATEGORYROUTE', value: category_route })
-    }, [category_route])
+    }, [category_route,dispatch])
     const router = useRouter()
     const paramSubProductId = router.query.subProductId as string
     // const [isShowLargeImage, setIsShowLargeImage] = useState<boolean>(false)

@@ -3,20 +3,20 @@ import { useCustomDispatch, useCustomSelector } from 'hooks'
 import Link from 'next/link'
 import { TNavData } from '../api/nav'
 import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 export const navColor = {
     lihovered: "#F0EDE5"
 }
 export default function Navigation(props: { navData: TNavData }) {
+    const nowRouteParams = useCustomSelector('nowCategoryRoute')
+    const router = useRouter()
+    const dispatch = useCustomDispatch()
+    const isNavActived = router.query.subProductId || router.query.category
+    if (!isNavActived && nowRouteParams !== '') {
+        dispatch({ type: 'CHANGE_CATEGORYROUTE', value: '' })
+    }
     if (!props.navData || props.navData.length === 0) {
         return null
-    }
-    console.log('nav render')
-    const router = useRouter()
-    const isNavActived = router.query.subProductId || router.query.category
-    let nowRouteParams = useCustomSelector('nowCategoryRoute')
-    if (!isNavActived && nowRouteParams !== '') {
-        const dispatch = useCustomDispatch()
-        dispatch({ type: 'CHANGE_CATEGORYROUTE', value: '' })
     }
     return (
         <nav className="p-3">

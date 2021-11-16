@@ -8,9 +8,10 @@ export default function ProductDetail(props: { subProductDetailData: IProductDet
     console.log('detail render')
     const { subProductDetailData, paramSubProductId } = props
     const { gender_name, product_name, subProducts } = subProductDetailData
-    const [targetSubProduct, setTargetSubProduct] = useState<IProductDetail_subProuct>(subProducts.find(subProduct =>
-        String(subProduct.sub_product_id) === paramSubProductId
-    ))
+    const [targetSubProduct, setTargetSubProduct] = useState<IProductDetail_subProuct>(
+        (subProducts.find(subProduct =>
+            String(subProduct.sub_product_id) === paramSubProductId)) as IProductDetail_subProuct
+    )
     const [targetSize, setTargetSize] = useState<ISize | undefined>(
         targetSubProduct.sizes.find(size => size.isAvailable)
     )
@@ -20,7 +21,7 @@ export default function ProductDetail(props: { subProductDetailData: IProductDet
 
     }
     const handleClickColor = (_subProductId: number) => {
-        const clickedSubProduct = subProducts.find(subProduct => subProduct.sub_product_id === _subProductId)
+        const clickedSubProduct = subProducts.find(subProduct => subProduct.sub_product_id === _subProductId) as IProductDetail_subProuct
         const findAvailableSize = clickedSubProduct.sizes.find(size => size.isAvailable)
         if (targetSubProduct === clickedSubProduct || !findAvailableSize) {
             return
@@ -31,7 +32,7 @@ export default function ProductDetail(props: { subProductDetailData: IProductDet
         }
         const nowSizeName = targetSize.sizeName
         const sameSize = clickedSubProduct.sizes.find(size => size.sizeName === nowSizeName)
-        if (!sameSize.isAvailable) {
+        if (!sameSize || !sameSize.isAvailable) {
             setTargetSize(undefined)
         }
         else {
@@ -65,13 +66,13 @@ export default function ProductDetail(props: { subProductDetailData: IProductDet
         }
         setQty(num)
     }
-    const handleMoveInColor = (subProductId) => {
+    const handleMoveInColor = (subProductId: number) => {
         if (subProductId === targetSubProduct.sub_product_id) {
             return
         }
         setNowHoverSubProduct(subProductDetailData.subProducts.find(p => p.sub_product_id === subProductId))
     }
-    const handleMoveOutColor = (subProductId) => {
+    const handleMoveOutColor = (subProductId: number) => {
         if (subProductId === targetSubProduct.sub_product_id) {
             return
         }
@@ -83,6 +84,7 @@ export default function ProductDetail(props: { subProductDetailData: IProductDet
                 <div className="flex">
                     <button className='mr-5' onClick={() => handleClickImage()}>
                         <Image
+                            alt={(nowHoverSubProduct || targetSubProduct).color_name}
                             loader={imageLoader({
                                 use: 'subProduct',
                                 subProductId: (nowHoverSubProduct || targetSubProduct).sub_product_id
@@ -116,6 +118,7 @@ export default function ProductDetail(props: { subProductDetailData: IProductDet
                                     title={subProduct.color_name}>
                                     <div className='w-6 h-6 items-center justify-center flex'>
                                         <Image
+                                            alt={targetSubProduct.color_name}
                                             loader={imageLoader({ use: 'color', colorId: subProduct.color_id })}
                                             src={String(subProduct.color_id)}
                                             height={colorImageHeight}
@@ -155,6 +158,7 @@ export default function ProductDetail(props: { subProductDetailData: IProductDet
                     Array(subProductDetailData.content_num).fill(0).map((num, index) => (
                         <div key={index} className="my-2 text-center">
                             <Image
+                                alt={'內容'}
                                 loader={imageLoader({
                                     use: 'content',
                                     productId: subProductDetailData.product_id,
@@ -171,7 +175,8 @@ export default function ProductDetail(props: { subProductDetailData: IProductDet
                     Array(subProductDetailData.common_content_num).fill(0).map((num, index) => (
                         <div key={index} className="my-2 text-center">
                             <Image
-                                loader={imageLoader({use:'commonContent',imageNum:index+1})}
+                                alt={'內容'}
+                                loader={imageLoader({ use: 'commonContent', imageNum: index + 1 })}
                                 src={String(index + 1)}
                                 height={910}
                                 width={760}

@@ -18,7 +18,7 @@ export default function Category(props: IProps) {
     const dispatch = useCustomDispatch()
     useEffect(() => {
         dispatch({ type: 'CHANGE_CATEGORYROUTE', value: categoryRoute })
-    }, [categoryRoute])
+    }, [categoryRoute,dispatch])
     return (
         <div className='flex'>
             <CategoryAside asideData={asideData} categoryRoute={categoryRoute} />
