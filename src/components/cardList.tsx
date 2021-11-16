@@ -14,7 +14,7 @@ export default function CardList(props: {
                         <div className="my-1">{series.series_name}</div>
                         <div className="w-full">
                             {series.productCards.map(productCardData =>
-                                <div className="inline-block w-1/4">
+                                <div className="inline-block w-1/4" key={productCardData.product_id}>
                                     <ProductCard key={productCardData.product_id} productCardData={productCardData} isShowColors={true} /></div>)}
                         </div>
                     </div>)}
@@ -26,7 +26,7 @@ export default function CardList(props: {
         <section className='w-full'>
             {
                 allCards.map(cardData =>
-                    <div className="w-1/4 inline-block" >
+                    <div className="w-1/4 inline-block" key={cardData.product_id}>
                         <ProductCard productCardData={cardData} isShowColors={false} />
                     </div>)
             }

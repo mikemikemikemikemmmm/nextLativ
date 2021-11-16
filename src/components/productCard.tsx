@@ -28,7 +28,7 @@ export default function ProductCard(props: { productCardData: IProductCard, isSh
             <div className="my-1 ">
                 {isShowColors && <div className='flex justify-center'>
                     {subProducts.map(subProduct =>
-                        <div className='m-1 '>
+                        <div className='m-1 ' key={subProduct.sub_product_id}>
                             <Link
                                 key={subProduct.color_id}
                                 href={`/Detail/${subProduct.sub_product_id}`}

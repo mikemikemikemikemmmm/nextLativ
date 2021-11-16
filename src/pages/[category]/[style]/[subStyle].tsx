@@ -6,6 +6,7 @@ import { ISeries } from "@customTypes/series"
 import { useCustomDispatch } from 'hooks'
 import { useRouter } from "next/router"
 import CardList from "@components/cardList"
+import { useEffect } from "react"
 interface IProps {
     asideData: TAside,
     seriesData: ISeries[]
@@ -15,7 +16,7 @@ export default function GenderSubCategory(props: IProps) {
     const router = useRouter()
     const categoryRoute = router.query.category as string
     const dispatch = useCustomDispatch()
-    dispatch({ type: 'CHANGE_CATEGORYROUTE', value: categoryRoute })
+    useEffect(() => { dispatch({ type: 'CHANGE_CATEGORYROUTE', value: categoryRoute }) }, [categoryRoute])
     return (
         <div className='flex'>
             <GenderAside asideData={asideData} categoryRoute={categoryRoute} />

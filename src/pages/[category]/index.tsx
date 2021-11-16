@@ -7,7 +7,8 @@ import { ISeries } from '@customTypes/series'
 import { TAside } from '@customTypes/aside'
 import { useCustomDispatch } from 'hooks'
 import CardList from '@components/cardList'
-interface IProps { 
+import { useEffect } from 'react'
+interface IProps {
     seriesData: ISeries[], asideData: TAside
 }
 export default function Category(props: IProps) {
@@ -15,7 +16,9 @@ export default function Category(props: IProps) {
     const router = useRouter()
     const categoryRoute = router.query.category as string
     const dispatch = useCustomDispatch()
-    dispatch({ type: 'CHANGE_CATEGORYROUTE', value: categoryRoute })
+    useEffect(() => {
+        dispatch({ type: 'CHANGE_CATEGORYROUTE', value: categoryRoute })
+    }, [categoryRoute])
     return (
         <div className='flex'>
             <CategoryAside asideData={asideData} categoryRoute={categoryRoute} />

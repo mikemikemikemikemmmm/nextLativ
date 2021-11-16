@@ -153,7 +153,7 @@ export default function ProductDetail(props: { subProductDetailData: IProductDet
             <section>
                 {
                     Array(subProductDetailData.content_num).fill(0).map((num, index) => (
-                        <div className="my-2 text-center">
+                        <div key={index} className="my-2 text-center">
                             <Image
                                 loader={imageLoader({
                                     use: 'content',
@@ -169,7 +169,7 @@ export default function ProductDetail(props: { subProductDetailData: IProductDet
                     )}
                 {
                     Array(subProductDetailData.common_content_num).fill(0).map((num, index) => (
-                        <div className="my-2 text-center">
+                        <div key={index} className="my-2 text-center">
                             <Image
                                 loader={imageLoader({use:'commonContent',imageNum:index+1})}
                                 src={String(index + 1)}

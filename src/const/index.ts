@@ -1,4 +1,6 @@
-export const baseURL = "http://localhost:3001/"
+// export const baseURL = "http://localhost:3001/"
+export const baseURL = "http://188.166.190.48/"
+
 export const productDetailWideth = 500
 export const productDetailheight = 500
 export const colorImageWideth = 20
