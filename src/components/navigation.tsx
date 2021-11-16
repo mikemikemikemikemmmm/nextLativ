@@ -7,7 +7,7 @@ export const navColor = {
     lihovered: "#F0EDE5"
 }
 export default function Navigation(props: { navData: TNavData }) {
-    if (!props.navData) {
+    if (!props.navData || props.navData.length === 0) {
         return null
     }
     console.log('nav render')

@@ -1,21 +1,6 @@
-import { IActivity_AfterGetProductData, IActivity } from "@types/";
-import { category, fakePromise } from "fakeData";
+
 import { baseURL } from "const";
-export const flatCategory = () => {
-    return category.map(category => category.styles.map(style => style.subStyles.map(subStyle => {
-        return {
-            categoryRoute: category.category_route, styleRoute: style.style_route, subStyleRoute: subStyle.sub_style_route
-        }
-    }))).flat(3)
-}
-export const getProductDataArrayByIdArray = async (ids: string[]) => {
-    const promiseArray = ids.map(id => fakePromise('getProductById', id))
-    return Promise.all(promiseArray)
-}
-export const modifyIActivityToIActivity_AfterGetProductData = (activity: IActivity): IActivity_AfterGetProductData => {
-    let activity_AfterGetProductData = activity
-    activity_AfterGetProductData.cat
-}
+import { ImageLoaderProps } from "next/image";
 type TImageLoaderParams =
     { use: 'color', colorId: number } |
     { use: 'subProduct', subProductId: number } |
@@ -23,7 +8,7 @@ type TImageLoaderParams =
     { use: 'commonContent', imageNum: number } |
     { use: 'productCard', productId: number }
 export const imageLoader = (paramsObj: TImageLoaderParams) => {
-    return ({ src, width, quality }) => {
+    return (props:ImageLoaderProps) => {
         switch (paramsObj.use) {
             case 'content':
                 return `${baseURL}image/content/${paramsObj.productId}/${paramsObj.imageNum}.jpg`

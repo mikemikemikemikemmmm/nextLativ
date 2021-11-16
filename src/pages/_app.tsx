@@ -6,9 +6,11 @@ import { Provider } from 'react-redux'
 import { store } from '../store'
 import { useEffect, useState } from 'react'
 import { getNavData, TNavData } from '../api/nav'
-function MyApp({ Component, pageProps }) {
+import { AppPropsType } from 'next/dist/next-server/lib/utils'
+function MyApp(props: AppPropsType) {
+  const { pageProps, Component } = props
   console.log('app render')
-  const [navData, setNavData] = useState<TNavData>(undefined)
+  const [navData, setNavData] = useState<TNavData>([])
   useEffect(() => {
     (async () => {
       const _navData = await getNavData()
